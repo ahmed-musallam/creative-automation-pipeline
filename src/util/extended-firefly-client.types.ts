@@ -1,6 +1,8 @@
+import { FireflyAspectRatios } from "./aspect-ratio-util.js";
+
 export type SimpleGenerateImagesOptions = {
   prompt: string;
-  aspectRatio: "1:1" | "16:9";
+  aspectRatio: keyof typeof FireflyAspectRatios;
   promptBiasingLocaleCode: string;
   modelVersion?: ModelVersion;
 };
@@ -8,7 +10,7 @@ export type SimpleGenerateImagesOptions = {
 export type SimpleGenerateObjectCompositeOptions = {
   prompt: string;
   objectImage: string;
-  aspectRatio: "1:1" | "16:9";
+  aspectRatio: keyof typeof FireflyAspectRatios;
 };
 
 export type ModelVersion =

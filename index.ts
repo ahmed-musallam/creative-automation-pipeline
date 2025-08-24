@@ -11,6 +11,12 @@ import ora from "ora";
 import path from "path";
 import { logger, setLogLevel } from "./src/util/logger.js";
 import { AzureCampaignClient } from "./src/util/azure-client.js";
+import {
+  FireflyAspectRatioKey,
+  FireflyAspectRatios,
+  getApproximatedAspectRatio,
+  isValidAspectRatio,
+} from "./src/util/aspect-ratio-util.js";
 
 const program = new Command();
 
@@ -36,6 +42,23 @@ program
   .option("-i, --input <dir>", "Path to input assets directory.", "inputs")
   .option("-o, --output <dir>", "Path to output directory.", "outputs")
   .option(
+    "-r, --aspect-ratios <ratios>",
+    "Comma-separated list of aspect ratios to generate. Allowed values: (1:1, 16:9, 9:16, 4:3, 3:4, 7:4, 9:7, 7:9). Any other aspect ratio will be approximated to the closest supported one.",
+    (value) => {
+      const ratios = value.split(",").map((r) => r.trim());
+      const invalid = ratios.filter((r) => !isValidAspectRatio(r));
+      if (invalid.length > 0) {
+        throw new Error(
+          `Invalid aspect ratio(s): ${invalid.join(
+            ", "
+          )}. Each must be in the format number:number (e.g. 1:1, 16:9).`
+        );
+      }
+      return ratios;
+    },
+    ["1:1", "16:9"]
+  )
+  .option(
     "-l, --log-level <level>",
     "Log level. One of: error, warning, info, debug",
     (value) => {
@@ -55,7 +78,11 @@ program
   .action(
     async (
       campaignBriefPath: string,
-      options: { input: string; output: string; logLevel: string }
+      options: {
+        output: string;
+        logLevel: string;
+        aspectRatios: string[];
+      }
     ) => {
       console.log("log level", options.logLevel);
       process.env.LOG_LEVEL = options.logLevel || "info";
@@ -97,10 +124,37 @@ program
           apiVersion: process.env.AZURE_API_VERSION!,
           modelName: process.env.AZURE_MODEL_NAME!,
         });
+
+        const unsupportedAspectRatios = options.aspectRatios.filter(
+          (r) => !Object.keys(FireflyAspectRatios).includes(r)
+        );
+
+        const approximatedAspectRatios = unsupportedAspectRatios.map((r) =>
+          getApproximatedAspectRatio(r)
+        );
+
+        if (unsupportedAspectRatios.length > 0) {
+          logger.warn(
+            `Unsupported aspect ratio(s): ${unsupportedAspectRatios.join(
+              ", "
+            )}. We will approximate them to the closest supported ratio(s): ${approximatedAspectRatios.join(
+              ", "
+            )}`
+          );
+        }
+
+        // Remove unsupported aspect ratios and add approximated ones if any
+        const allAspectRatios = [
+          ...options.aspectRatios.filter(
+            (r) => !unsupportedAspectRatios.includes(r)
+          ),
+          ...approximatedAspectRatios,
+        ];
+
         // Set up generation options
         const generationOptions: GenerationOptions = {
-          inputDir: options.input,
-          outputDir: options.output,
+          outputDir: path.resolve(process.cwd(), options.output),
+          aspectRatios: allAspectRatios as FireflyAspectRatioKey[],
         };
 
         spinner.text = "Generating creative assets...\n";

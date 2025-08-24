@@ -1,8 +1,29 @@
 {
   "name": "creative-cli",
   "version": "1.0.0",
-  "description": "A CLI to automate creative asset generation.",
-  "private": true,
+  "description": "A CLI to automate creative asset generation using Adobe Firefly APIs and Azure OpenAI.",
+  "main": "dist/index.js",
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "keywords": [
+    "creative",
+    "automation",
+    "cli",
+    "adobe",
+    "firefly",
+    "image",
+    "generation",
+    "marketing",
+    "assets"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/creative-automation-pipeline.git"
+  },
+  "homepage": "https://github.com/yourusername/creative-automation-pipeline#readme",
+  "bugs": {
+    "url": "https://github.com/yourusername/creative-automation-pipeline/issues"
+  },
   "type": "module",
   "bin": {
     "creative-cli": "dist/index.js"

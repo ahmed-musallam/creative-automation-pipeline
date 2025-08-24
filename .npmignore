@@ -1,0 +1,66 @@
+# Source files
+src/
+*.ts
+tsconfig.json
+
+# Development files
+.env*
+.cursor/
+.vscode/
+.DS_Store
+
+# Build artifacts
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test files
+test/
+tests/
+__tests__/
+*.test.*
+*.spec.*
+
+# Documentation development
+docs/
+*.md
+!README.md
+
+# Example/demo files
+examples/
+demo/
+sample/
+inputs/
+outputs/
+generated-campaigns/
+campaign.yaml
+hidden_files/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Misc
+Thumbs.db

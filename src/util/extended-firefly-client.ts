@@ -1,9 +1,4 @@
-import {
-  ContentClass,
-  FireflyClient,
-  GenerateImagesRequest,
-  GenerateImagesResponse,
-} from "@adobe/firefly-apis";
+import { ContentClass, FireflyClient } from "@adobe/firefly-apis";
 import { ApiOptions, ApiResponse } from "@adobe/firefly-services-sdk-core";
 import type {
   CustomModelsFF3pInfo,
@@ -16,15 +11,14 @@ import type {
   GenerateObjectCompositeRequestV3,
   SimpleGenerateObjectCompositeOptions,
 } from "./extended-firefly-client.types.js";
+import {
+  FireflyAspectRatioKey,
+  FireflyAspectRatios,
+  getApproximatedAspectRatio,
+} from "./aspect-ratio-util.js";
 const fs = await import("fs/promises");
 
-const allowedAspectRatios = ["1:1", "16:9"];
-
-export const AspectRatios = {
-  "1:1": { width: 2048, height: 2048 },
-  "16:9": { width: 2688, height: 1536 },
-  // "9:16": { width: 1440, height: 2560 },
-};
+const allowedAspectRatios = ["1:1", "16:9", "9:16"];
 
 /**
  * Extended because default impl does not support custom model versions, even though the API supports it.
@@ -219,11 +213,23 @@ export class ExtendedFireflyClient extends FireflyClient {
     objectImage,
     aspectRatio,
   }: SimpleGenerateObjectCompositeOptions) {
-    const size = AspectRatios[aspectRatio];
+    let size = FireflyAspectRatios[aspectRatio as FireflyAspectRatioKey];
+
+    const needsExpand = !size;
+    if (needsExpand) {
+      const newRatio = getApproximatedAspectRatio(aspectRatio);
+      size = FireflyAspectRatios[newRatio as keyof typeof FireflyAspectRatios];
+      throw new Error(
+        `Unsupported aspect ratio: ${aspectRatio}, closest supported ratio is ${newRatio} with size ${size.width}x${size.height}`
+      );
+    }
+
     // create a blob from the local file
 
     const imageBuffer = await fs.readFile(objectImage);
-    const objectImageBlob = new Blob([imageBuffer], { type: "image/png" });
+    const objectImageBlob = new Blob([new Uint8Array(imageBuffer)], {
+      type: "image/png",
+    });
     const image = await this.upload(objectImageBlob);
     const job = await this.generateObjectCompositeAsync({
       contentClass: "photo",
@@ -269,7 +275,7 @@ export class ExtendedFireflyClient extends FireflyClient {
     //   ? await this.getModelId(modelVersion)
     //   : undefined;
 
-    const size = AspectRatios[aspectRatio];
+    const size = FireflyAspectRatios[aspectRatio as FireflyAspectRatioKey];
 
     const job = await this.generateImagesAsync(
       {

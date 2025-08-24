@@ -100,7 +100,7 @@ export class AzureCampaignClient {
       role: "system",
       content:
         "You turn marketing briefs into explicit, literal, and detailed scene plans for object composition of beverage cutouts. " +
-        "The scene plan should be detailed enough to be used as a prompt for a photo generation model. " +
+        "The scene plan should be detailed enough to be used as a prompt for a photo generation model, the scene plan should not mention the product itself, only the scene and the props" +
         "Bias the scene plan towards the provided target region, which is a hyphen-separated string combining the ISO 639-1 language code and the ISO 3166-1 region (e.g., en-US). " +
         "The image generation prompt should be a single sentence that describes the image generation prompt and is no longer than 1024 characters. " +
         "Only output JSON that strictly matches the provided schema. The canvas origin is the center; units are centimeters.",

@@ -5,10 +5,7 @@ import fs from "fs";
 import path from "path";
 import { Readable } from "stream";
 import { finished } from "stream/promises";
-import {
-  AspectRatios,
-  ExtendedFireflyClient,
-} from "./util/extended-firefly-client.js";
+import { ExtendedFireflyClient } from "./util/extended-firefly-client.js";
 import {
   CampaignBrief,
   type Product,
@@ -17,10 +14,14 @@ import {
 
 import { logger } from "./util/logger.js";
 import { AzureCampaignClient } from "./util/azure-client.js";
+import {
+  FireflyAspectRatios,
+  FireflyAspectRatioKey,
+} from "./util/aspect-ratio-util.js";
 
 export interface GenerationOptions {
-  inputDir: string;
   outputDir: string;
+  aspectRatios: FireflyAspectRatioKey[];
 }
 
 async function downloadFile(url: string, filePath: string): Promise<void> {
@@ -45,7 +46,7 @@ async function generateProductImages({
   product: Product;
   brief: CampaignBrief;
   options: GenerationOptions;
-  ratio: keyof typeof AspectRatios;
+  ratio: keyof typeof FireflyAspectRatios;
 }) {
   const outputDir = path.join(
     options.outputDir,
@@ -103,7 +104,7 @@ async function generateProductImages({
     const resp = await firefly.simpleGenerateObjectComposite({
       prompt,
       objectImage: product.cutoutImage || "",
-      aspectRatio: ratio as keyof typeof AspectRatios,
+      aspectRatio: ratio as keyof typeof FireflyAspectRatios,
     });
 
     if (resp.status === "succeeded") {
@@ -152,7 +153,7 @@ export async function generateCreativeAssets(
   azureClient: AzureCampaignClient,
   onProgress: (progress: {
     product: Product;
-    ratio: keyof typeof AspectRatios;
+    ratio: keyof typeof FireflyAspectRatios;
   }) => void
 ): Promise<void> {
   // fail fast
@@ -164,20 +165,20 @@ export async function generateCreativeAssets(
   const promises = [];
 
   for (const product of brief.products) {
-    for (const ratio of Object.keys(AspectRatios)) {
+    for (const ratio of options.aspectRatios) {
       await generateProductImages({
         firefly,
         azureClient,
         product,
         brief,
         options,
-        ratio: ratio as keyof typeof AspectRatios,
+        ratio: ratio as keyof typeof FireflyAspectRatios,
       });
       await new Promise((resolve) => setTimeout(resolve, 1000)); // wait 1 second between products
       onProgress &&
         onProgress({
           product: product,
-          ratio: ratio as keyof typeof AspectRatios,
+          ratio: ratio as keyof typeof FireflyAspectRatios,
         });
     }
   }
