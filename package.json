@@ -18,11 +18,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/creative-automation-pipeline.git"
+    "url": "https://github.com/ahmed-musallam/creative-automation-pipeline"
   },
-  "homepage": "https://github.com/yourusername/creative-automation-pipeline#readme",
+  "homepage": "https://github.com/ahmed-musallam/creative-automation-pipeline#readme",
   "bugs": {
-    "url": "https://github.com/yourusername/creative-automation-pipeline/issues"
+    "url": "https://github.com/ahmed-musallam/creative-automation-pipeline/issues"
   },
   "type": "module",
   "bin": {

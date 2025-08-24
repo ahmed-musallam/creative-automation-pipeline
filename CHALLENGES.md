@@ -14,7 +14,7 @@ Note: while it is easily feasible to remove backgerounds automatically from the 
 
 > Please plan to spend 3-4 hours on the overall assignment
 
-## Firefly SDS does not use the latest async APIs
+## Firefly SDK does not use the latest async APIs
 
 I elected to use https://www.npmjs.com/package/@adobe/firefly-apis only to descover that it used the depricated V3 APIs and not the new Async APIs described in the dev docs.
 
@@ -26,6 +26,20 @@ the SDK uses the depricated API. so I enhanced it in `src/util/extended-firefly-
 
 ## 9:16 aspect ration
 
-Firefly Image Gen and Objeect Composition API do not provide a way to produce 9:16 aspect ration images. There are aspect rations that are close, but not exactly matching the requirnment. I elected to use Epand Image API for that specific aspect ration to demonstraite that it is possible.
+Firefly Image Gen and Objeect Composition API do not provide a way to produce 9:16 aspect ration images. There are aspect rations that are close, but not exactly matching the requirnment. One could use Firefly Image Expand to produce any size image (aspect ration) automatically, but this is not built into the pipeline at this time. I elected to log warnings and approximate the closest aspect ration that firefly does support.
 
-I'd argue this would be completely unneccessary for a POC to go to that length, but figured I'd implement to show that it is technically possible.
+Note: I'd argue this would be completely unneccessary for a POC to go to that length, but my implementation keeps the user experience reasonable.
+
+## Prompt generation for the campaign brief
+
+This impl uses an azure deployed `gpt-4o-mini`, provides the brief to the model and asks for reasonable image gen prompt which is then fed to firefly for image generation.
+
+The request to `gpt-4o-mini` does include all of the information in the brief. I would need specific negative use-cases to ensure that it is sensetive to locale/audience; but I have not validate that due to time constraints.
+
+## Object composition result quality
+
+as expected, firefly hullucinates quite a bit, but does generate relatively usable results. With further tweaking to the prompt generation process, it can produce better results, but there is not enough time to do that for this POC.
+
+## Exact image size - AKA resizing of the result of the Firefly API
+
+while this is not currently implemented, it would be easy to use [Sharp](https://www.npmjs.com/package/sharp) to do this transformation. Was not implemented due to lack of time.
