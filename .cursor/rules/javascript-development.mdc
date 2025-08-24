@@ -1,0 +1,90 @@
+# Creative Automation Pipeline - JavaScript Development Standards
+
+## Project Context
+
+This is a take-home assignment for building a creative automation pipeline for social ad campaigns using JavaScript/Node.js. The system generates localized creative assets at scale using GenAI.
+
+## Code Style & Structure
+
+- Use ES6+ features (async/await, destructuring, arrow functions)
+- Follow consistent naming conventions (camelCase for variables/functions, PascalCase for classes)
+- Use meaningful variable and function names that reflect the creative automation domain
+- Implement proper error handling with try-catch blocks and custom error classes
+- Use TypeScript-style JSDoc comments for better code documentation
+
+## Project Organization
+
+- Organize code into logical modules (asset-ingestion, genai-integration, storage, monitoring)
+- Use a clear folder structure: `src/`, `config/`, `utils/`, `services/`, `models/`
+- Separate business logic from API/CLI interfaces
+- Create reusable utility functions for common operations
+
+## Dependencies & Package Management
+
+- Use npm or yarn for package management
+- Keep dependencies minimal and focused on core requirements
+- Use environment variables for configuration (API keys, endpoints)
+- Implement proper .env file handling with dotenv
+
+## API Integration Patterns
+
+- Use axios or fetch for HTTP requests to GenAI APIs
+- Implement retry logic for API calls with exponential backoff
+- Use proper request/response handling with error boundaries
+- Cache API responses where appropriate to reduce costs
+
+## File System Operations
+
+- Use fs.promises for async file operations
+- Implement proper file path handling with path module
+- Create organized output directory structure by product/aspect ratio
+- Handle file uploads and downloads efficiently
+
+## Error Handling & Logging
+
+- Use a logging library (winston, pino) for structured logging
+- Implement different log levels (info, warn, error, debug)
+- Create custom error classes for different failure scenarios
+- Provide meaningful error messages for debugging
+
+## Configuration Management
+
+- Use configuration objects for different environments
+- Validate configuration on startup
+- Support both development and production configurations
+- Use environment-specific settings for API endpoints and keys
+
+## Testing Considerations
+
+- Write unit tests for core business logic
+- Use Jest or Mocha for testing framework
+- Mock external API calls in tests
+- Test error scenarios and edge cases
+
+## Performance & Scalability
+
+- Use streams for large file processing
+- Implement proper memory management for image processing
+- Use worker threads for CPU-intensive tasks
+- Cache frequently accessed data
+
+## Security Best Practices
+
+- Never hardcode API keys or sensitive data
+- Validate all input data (campaign briefs, file uploads)
+- Sanitize file paths to prevent directory traversal
+- Use HTTPS for all external API calls
+
+## Documentation Standards
+
+- Write comprehensive JSDoc comments for all functions
+- Include usage examples in comments
+- Document API endpoints and expected request/response formats
+- Create clear README with setup and usage instructions
+
+## Code Quality Standards
+
+- Use ESLint with appropriate rules for Node.js development
+- Implement Prettier for consistent code formatting
+- Use meaningful commit messages following conventional commits
+- Write self-documenting code with clear function purposes

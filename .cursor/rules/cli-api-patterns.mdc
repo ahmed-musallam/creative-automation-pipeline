@@ -1,0 +1,76 @@
+# CLI & API Integration Patterns
+
+## CLI Interface Standards
+
+- Use commander.js or yargs for CLI argument parsing
+- Provide clear help text and usage examples
+- Support both interactive and batch processing modes
+- Implement progress indicators for long-running operations
+- Include verbose/debug logging options
+
+## Campaign Brief Processing
+
+- Validate JSON/YAML campaign briefs with proper schemas
+- Handle multiple products and target regions efficiently
+- Support localized messaging with i18n considerations
+- Implement proper data transformation for GenAI APIs
+
+## Asset Generation Patterns
+
+- Support multiple aspect ratios (1:1, 9:16, 16:9) programmatically
+- Handle both existing assets and AI-generated content
+- Implement proper image processing and resizing
+- Organize outputs by product and aspect ratio automatically
+
+## GenAI API Integration
+
+- Use fetch for HTTP requests to GenAI APIs
+- Implement retry logic for API calls with exponential backoff
+- Use proper request/response handling with error boundaries
+- Cache API responses where appropriate to reduce costs
+- Handle rate limiting and quota management
+
+## Monitoring & Alerting
+
+- Implement event-driven architecture for campaign monitoring
+- Track generation metrics and performance
+- Create alerting system for failed generations
+- Log all operations for audit trails
+
+## Error Handling Patterns
+
+- Create custom error classes for different failure scenarios
+- Provide meaningful error messages for debugging
+- Implement graceful degradation for API failures
+- Log errors with appropriate context and stack traces
+
+## Specific Technical Requirements
+
+### Output Specifications
+
+- **Required resolutions**:
+  - 1080x1080 (1:1 square)
+  - 1920x1080 (16:9 landscape)
+  - 1080x1920 (9:16 portrait)
+- **Format handling**: JPEG/PNG/SVG support
+- **Quality management**: Maintain appropriate quality for social media
+
+### Input Asset Handling
+
+- **Asset types**: Logos, product shots, pre-generated creatives
+- **Processing capabilities**: Generation, resizing, localization, recomposition
+- **Asset validation**: Check for required assets before generation
+- **Fallback strategies**: Handle missing or insufficient assets gracefully
+
+### GenAI Provider Integration
+
+- **Primary focus**: Use Adobe firefly.
+- **Mixed approach**: Can combine with other models
+- **Cloud Provider abstraction**: Design for potential multi-provider support
+
+### Brand Compliance & Legal
+
+- **Brand guidelines**: Implement checks based on brand requirements
+- **Legal content checks**: Flag prohibited words/content (plus feature)
+- **Asset validation**: Ensure required assets meet brand standards
+- **Compliance reporting**: Track and report compliance status

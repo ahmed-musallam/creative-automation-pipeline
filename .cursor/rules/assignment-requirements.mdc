@@ -1,0 +1,117 @@
+# Assignment Requirements & Constraints
+
+## Assignment Overview
+
+- **Type**: FDE Take-Home Exercise
+- **Duration**: 3-4 hours implementation + 30-minute presentation
+- **Client**: Global consumer goods company launching hundreds of localized social ad campaigns monthly
+
+## Core Business Objectives
+
+1. **Accelerate campaign velocity** - Rapid ideation, production, approval, and launch
+2. **Ensure brand consistency** - Maintain global brand guidelines across markets
+3. **Maximize relevance & personalization** - Adapt to local cultures and preferences
+4. **Optimize marketing ROI** - Improve performance vs. cost and efficiency
+5. **Gain actionable insights** - Track effectiveness at scale
+
+## Technical Requirements (Minimum)
+
+### Must implement
+
+- Goal: A working PoC that automates creative asset generation for social ad campaigns using GenAI.
+- Input brief: Accept a brief YAML containing:
+  - products (≥2)
+  - target region/market
+  - target audience
+  - campaign message.
+- Asset reuse: Read input assets from a local folder (or mock storage) and reuse when available.
+- Backfill via GenAI: If required assets are missing, generate them with a GenAI image model.
+- Renditions: Produce creatives in at least three aspect ratios (e.g., 1:1, 9:16, 16:9). required resolutions:
+  - 1080x1080 (1:1 square)
+  - 1920x1080 (16:9 landscape)
+  - 1080x1920 (9:16 portrait)
+- Local run: Implement as a local command-line tool or simple local app (language/framework is your choice).
+- Output structure: Save outputs to a folder, clearly organized by product and aspect ratio.
+- Documentation: Include a README that explains how to run, example input/output, key design decisions, and assumptions/limitations.
+
+## Nice to Have Features
+
+- Localization: Provide localized message support (if possible).
+- Brand checks: Basic brand compliance (e.g., logo presence, brand colors).
+- Legal checks: Simple content checks (e.g., prohibited words).
+- Logging/reporting: Emit logs or a simple results report.
+- That’s the whole spec for Task 2, scoped to what you need to build and ship locally
+
+## Implementation Details
+
+- build the app as a functional typescript API.
+- expose the API via a simple CLI that accepts the YAML, parses it, passes it to the functional TS API.
+
+## Architecture Components
+
+- Asset ingestion system
+- Storage management (Azure/AWS/Dropbox)
+- GenAI-based asset generation
+- Agentic monitoring system
+- Stakeholder communication system
+
+## Stakeholders
+
+- Creative Lead
+- Ad Operations
+- IT
+- Legal/Compliance
+
+## Success Criteria
+
+- Working proof-of-concept
+- Clear technical approach
+- Problem-solving demonstration
+- Creative technology integration
+- Comprehensive documentation
+- Professional presentation readiness
+
+## Technical Constraints
+
+- Must run locally
+- Handle hundreds of campaigns efficiently
+- Support multiple products and regions
+- Generate assets for 3+ aspect ratios
+- Demonstrate scalability and maintainability
+
+## Key Clarifications & Requirements
+
+### GenAI Provider
+
+- **Firefly Services (FFS)**: Recommended for internal applicants, not mandatory
+- Can use mixed approach with other models
+- Focus on one provider for POC (abstraction possible but not required)
+- Internal FFS access: https://wiki.corp.adobe.com/display/GenAI/Firefly+Services+Internal+Access
+
+### Output Specifications
+
+- **Resolutions**: Common social media formats
+  - 1080x1080 (1:1)
+  - 1920x1080 (16:9)
+  - 1080x1920 (9:16)
+- **Formats**: JPEG/PNG/SVG (choose what makes sense for your solution)
+
+### Input Assets
+
+- **Types**: Logos, product shots, pre-generated creatives
+- **Purpose**: Handle generation, resizing, localization, recomposition
+- **Brand compliance and legal checks are plus features**
+
+### Architecture Evaluation Criteria
+
+- **Completeness of CSC (Creative Services Cloud)** at general level
+- **Content creation & production** with GenAI/Firefly components
+- **Cloud provider**: Generic approach preferred (mix of Adobe and 3rd party)
+- **Key challenges**: Scalability, cost, hallucination handling, brand compliance
+
+### Task 3 - Agentic System Design
+
+- **Diversity**: Based on brand guidelines, focus on agent design (not creative diversity)
+- **"Insufficient assets"**: Refers to missing background assets, patterns, logos needed for generation
+- **Threshold**: Based on brand guidelines (e.g., X number of social formats per campaign)
+- **Stakeholder communication**: Direct email from you, not from the agent

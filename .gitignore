@@ -1,0 +1,107 @@
+hidden_files/
+
+# nodejs ignores
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build output
+dist/
+build/
+.tmp/
+.temp/
+.cache/
+.eslintcache
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Environment files
+.env
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# IDE/editor folders
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Misc
+*.tgz
+
+# Ignore output from npm pack
+*.tgz
+
+# Ignore local debug files
+*.local
+
+# Ignore generated docs
+docs/
+
+# Ignore by-products of npm
+.npm/
+
+# Ignore package manager stores
+.pnpm-store/
+
+# Ignore TypeScript build output
+*.tsbuildinfo
+
+# Ignore next.js build output
+.next/
+
+# Ignore Svelte build output
+.svelte-kit/
+
+# Ignore storybook build output
+storybook-static/
+
+# Ignore cypress output
+cypress/videos/
+cypress/screenshots/
+
+# Ignore playwright output
+test-results/
+
+# Ignore VSCode launch configs
+.vscode/launch.json
+
+# Ignore Mac system files
+.AppleDouble
+.LSOverride
+
+# Ignore Windows system files
+ehthumbs.db
+Desktop.ini
+
+# Ignore package directories in monorepo
+packages/*/node_modules/
+packages/*/dist/
+packages/*/build/
+packages/*/.eslintcache
+packages/*/coverage/
+packages/*/.nyc_output/
+packages/*/.tsbuildinfo
+packages/*/.env
+packages/*/.env.*.local
+packages/*/logs/
+packages/*/*.log
+packages/*/.npm/
+packages/*/.cache/
+packages/*/.tmp/
+packages/*/.local

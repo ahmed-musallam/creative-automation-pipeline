@@ -1,0 +1,36 @@
+{
+  "name": "creative-cli",
+  "version": "1.0.0",
+  "description": "A CLI to automate creative asset generation.",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "creative-cli": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc -w",
+    "generate": "npx tsx --env-file=.env index.ts generate campaign.yaml -o outputs"
+  },
+  "dependencies": {
+    "@adobe/firefly-apis": "^2.0.1",
+    "@adobe/firefly-services-common-apis": "^2.0.0",
+    "arktype": "^2.1.20",
+    "commander": "^14.0.0",
+    "dotenv": "^17.2.1",
+    "iso-3166-1": "^2.1.1",
+    "iso-639-1": "^3.1.5",
+    "js-yaml": "^4.1.0",
+    "ora": "^8.2.0",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.13.14",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
