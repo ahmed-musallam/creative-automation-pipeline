@@ -9,10 +9,14 @@ import type {
   CustomModelsFF3pInfo,
   ModelVersion,
   GenerateImagesAsyncResponse,
+  AsyncAcceptResponseV3,
   JobResultResponse,
-  GenerateImagesOptions as SimpleGenerateImagesOptions,
+  SimpleGenerateImagesOptions,
   GenerateImagesRequestV3,
-} from "./extended-firefly-client.types.ts";
+  GenerateObjectCompositeRequestV3,
+  SimpleGenerateObjectCompositeOptions,
+} from "./extended-firefly-client.types.js";
+const fs = await import("fs/promises");
 
 const allowedAspectRatios = ["1:1", "16:9"];
 
@@ -55,6 +59,42 @@ export class ExtendedFireflyClient extends FireflyClient {
         403: `Forbidden`,
         408: `Request Timeout`,
         413: `Request Entity Too Large`,
+        415: `Unsupported Media Type`,
+        422: `Unprocessable Entity`,
+        429: `Too Many Requests`,
+        500: `Internal Server Error`,
+      },
+      signal: options?.signal,
+    });
+  }
+
+  /**
+   * Generate Object Composite Async (POST /v3/images/generate-object-composite-async)
+   * @see: https://developer.adobe.com/firefly-services/docs/firefly-api/guides/api/image_generation/V3_Async/
+   */
+  public generateObjectCompositeAsync(
+    requestBody: GenerateObjectCompositeRequestV3, // Accepts both JSON and multipart/form-data bodies
+    options?: ApiOptions & {
+      xModelVersion?: ModelVersion;
+      mediaType?: "application/json" | "multipart/form-data";
+    }
+  ): Promise<ApiResponse<AsyncAcceptResponseV3>> {
+    // Default to application/json if not specified
+    const mediaType = options?.mediaType || "application/json";
+    return this._httpRequest.request({
+      method: "POST",
+      url: "/v3/images/generate-object-composite-async",
+      body: requestBody,
+      headers: {
+        ...(options?.xModelVersion
+          ? { "x-model-version": options.xModelVersion }
+          : {}),
+      },
+      mediaType,
+      errors: {
+        400: `Bad Request`,
+        403: `Forbidden`,
+        408: `Request Timeout`,
         415: `Unsupported Media Type`,
         422: `Unprocessable Entity`,
         429: `Too Many Requests`,
@@ -174,9 +214,42 @@ export class ExtendedFireflyClient extends FireflyClient {
     return jobResult.result;
   }
 
+  async simpleGenerateObjectComposite({
+    prompt,
+    objectImage,
+    aspectRatio,
+  }: SimpleGenerateObjectCompositeOptions) {
+    const size = AspectRatios[aspectRatio];
+    // create a blob from the local file
+
+    const imageBuffer = await fs.readFile(objectImage);
+    const objectImageBlob = new Blob([imageBuffer], { type: "image/png" });
+    const image = await this.upload(objectImageBlob);
+    const job = await this.generateObjectCompositeAsync({
+      contentClass: "photo",
+      prompt,
+      image: {
+        source: {
+          uploadId: image.result.images?.[0]?.id,
+        },
+      },
+      numVariations: 3,
+      placement: {
+        // defaulting to center placement for POC purposes
+        alignment: {
+          horizontal: "center",
+          vertical: "center",
+        },
+      },
+      size,
+    });
+    const jobId = job.result.jobId;
+    const jobResult = await this.awaitJobCompletion(jobId);
+    return jobResult;
+  }
+
   /**
    *  a convienience method to generate images with a simple interface
-   * @param param0
    */
   async simpleGenerateImages({
     prompt,

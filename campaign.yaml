@@ -1,0 +1,11 @@
+name: "Eco-Friendly-Campaign"
+products:
+  - name: "Eco-Friendly Energy Drink Can"
+    description: "A vibrant, modern energy drink can with bold graphics, dynamic colors, and a sleek, eco-friendly design that conveys energy and refreshment."
+    cutoutImage: "inputs/energy-drink-can.png"
+  - name: "Eco-Friendly Orange Soda Can"
+    description: "A healthy soda can with a fresh, clean look, highlighting natural ingredients and eco-friendly, recycled packaging."
+    cutoutImage: "inputs/orange-soda-can.png"
+targetRegion: "es-MX"
+targetAudience: "Eco-conscious millennials"
+campaignMessage: "Summer launch for Eco-Friendly Energy Drink and Orange Soda. Bright outdoor picnic vibe, highlight 'eco-friendly' and 'natural ingredients' badges. 1 hero can (energy drink), 2 supporting cans (orange soda). Include sliced orange, lemon, and mint props."

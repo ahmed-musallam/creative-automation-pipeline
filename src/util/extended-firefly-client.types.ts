@@ -1,8 +1,14 @@
-export type GenerateImagesOptions = {
+export type SimpleGenerateImagesOptions = {
   prompt: string;
   aspectRatio: "1:1" | "16:9";
   promptBiasingLocaleCode: string;
   modelVersion?: ModelVersion;
+};
+
+export type SimpleGenerateObjectCompositeOptions = {
+  prompt: string;
+  objectImage: string;
+  aspectRatio: "1:1" | "16:9";
 };
 
 export type ModelVersion =
@@ -53,6 +59,12 @@ export type GenerateImagesAsyncResponse = {
   jobId: string;
 };
 
+export type AsyncAcceptResponseV3 = {
+  jobId: string;
+  statusUrl: string;
+  cancelUrl: string;
+};
+
 export type PublicBinaryInputV3 = {
   url?: string;
   uploadId?: string;
@@ -66,6 +78,10 @@ export type InputMaskV3 = {
 export type InputImageV3 = {
   source: PublicBinaryInputV3;
   mask?: InputMaskV3;
+};
+
+export type BaseInputMaskV3 = {
+  source: PublicBinaryInputV3;
 };
 
 export type StylesImageReferenceV3 = {
@@ -125,6 +141,24 @@ export type GenerateImagesRequestV3 = {
   visualIntensity?: number;
 };
 
+export type GenerateObjectCompositeRequestV3 = {
+  prompt: string; // required, 1-1024 characters
+  image: InputImageV3; // required
+  mask?: BaseInputMaskV3; // optional based on spec description
+  contentClass?: "photo" | "art";
+  numVariations?: number; // 1-4
+  placement?: Placement;
+  seeds?: number[]; // 1-4 items
+  size?: SizeV3;
+  style?: StylesV3;
+};
+
+export type GenerateObjectCompositeResponseV3 = {
+  contentClass?: "photo" | "art";
+  outputs: OutputImageV3[];
+  size: Size;
+};
+
 // Types for /v3/status/{jobId} (Job Result) endpoint
 
 // Output image type
@@ -145,10 +179,7 @@ export type Size = {
 export type JobResultSucceeded = {
   jobId: string;
   status: "succeeded";
-  result: {
-    outputs: OutputImageV3[];
-    size: Size;
-  };
+  result: GenerateObjectCompositeResponseV3; // Can be any of the response types based on which API was called
 };
 
 // Running response (status: "running")

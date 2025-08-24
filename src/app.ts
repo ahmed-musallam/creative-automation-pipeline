@@ -8,14 +8,15 @@ import { finished } from "stream/promises";
 import {
   AspectRatios,
   ExtendedFireflyClient,
-} from "./util/extended-firefly-client.ts";
+} from "./util/extended-firefly-client.js";
 import {
   CampaignBrief,
   type Product,
   validateCampaignBrief,
-} from "./util/campaign-brief-parser.ts";
+} from "./util/campaign-brief-parser.js";
 
-import { logger } from "./util/logger.ts";
+import { logger } from "./util/logger.js";
+import { AzureCampaignClient } from "./util/azure-client.js";
 
 export interface GenerationOptions {
   inputDir: string;
@@ -33,12 +34,14 @@ async function downloadFile(url: string, filePath: string): Promise<void> {
 }
 async function generateProductImages({
   firefly,
+  azureClient,
   product,
   brief,
   options,
   ratio,
 }: {
   firefly: ExtendedFireflyClient;
+  azureClient: AzureCampaignClient;
   product: Product;
   brief: CampaignBrief;
   options: GenerationOptions;
@@ -58,15 +61,49 @@ async function generateProductImages({
     `Product: "${product.name}" for target region: ${brief.targetRegion} and aspect ratio: ${ratio}`
   );
 
-  const prompt = `A promotional image for a "${product.name}" (${product.description}) targeting ${brief.targetAudience}. The message is: "${brief.campaignMessage}".`;
-  logger.debug(`  - Generation Prompt: ${prompt}`);
+  logger.verbose(
+    `\n  - Asking Azure for scene plan for product: ${product.name}`
+  );
+
+  const scenePlan = await azureClient.generateSceneForProductCampaign(
+    product,
+    brief
+  );
+
+  logger.verbose(
+    `\n  - Azure scene plan: ${JSON.stringify(scenePlan, null, 2)}`
+  );
+  const prompt = scenePlan.image_generation_prompt;
+  // const prompt = [
+  //   // core environment
+  //   `${scenePlan.concept}. ${scenePlan.environment}. ${scenePlan.surface}.`,
+  //   // product-photo framing
+  //   `Photorealistic beverage product scene, high detail, realistic materials and reflections, clean composition.`,
+  //   // lighting & camera
+  //   `Lighting: ${scenePlan.lighting}.`,
+  //   `Camera: ${scenePlan.camera.angle} angle, ~${scenePlan.camera.focal_length_mm}mm look.`,
+  //   // color / styling
+  //   `Color grade: ${scenePlan.color_grade}.`,
+  //   // props (beverage-friendly)
+  //   scenePlan.props?.length ? `Props: ${scenePlan.props.join(", ")}.` : "",
+  // ]
+  //   .filter(Boolean)
+  //   .join("\n") as string;
+
+  logger.debug(`\n  - Generation Prompt: ${prompt}`);
 
   try {
-    const resp = await firefly.simpleGenerateImages({
-      prompt: prompt,
+    // const resp = await firefly.simpleGenerateImages({
+    //   prompt: prompt,
+    //   aspectRatio: ratio as keyof typeof AspectRatios,
+    //   promptBiasingLocaleCode: brief.targetRegion,
+    //   // modelVersion: "image4",
+    // });
+
+    const resp = await firefly.simpleGenerateObjectComposite({
+      prompt,
+      objectImage: product.cutoutImage || "",
       aspectRatio: ratio as keyof typeof AspectRatios,
-      promptBiasingLocaleCode: brief.targetRegion,
-      // modelVersion: "image4",
     });
 
     if (resp.status === "succeeded") {
@@ -112,6 +149,7 @@ export async function generateCreativeAssets(
   brief: CampaignBrief,
   options: GenerationOptions,
   firefly: ExtendedFireflyClient,
+  azureClient: AzureCampaignClient,
   onProgress: (progress: {
     product: Product;
     ratio: keyof typeof AspectRatios;
@@ -129,6 +167,7 @@ export async function generateCreativeAssets(
     for (const ratio of Object.keys(AspectRatios)) {
       await generateProductImages({
         firefly,
+        azureClient,
         product,
         brief,
         options,

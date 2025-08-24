@@ -9,3 +9,7 @@ export const logger = winston.createLogger({
     }),
   ],
 });
+
+export function setLogLevel(level: string) {
+  logger.level = level;
+}
