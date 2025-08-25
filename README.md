@@ -2,6 +2,8 @@
 
 A CLI tool that automates the generation of creative assets for marketing campaigns using Adobe Firefly Services and Azure OpenAI. This tool generates product images in multiple aspect ratios for social media and advertising campaigns.
 
+> As you review this submission, please remember, **This is POC**: the POC purpose is to evaluate technical skill and ability to work with different GenAI APIs. It is not intended to be production ready software. To implement all items from the exercise is to implement a GenStudio/Firefly competitor.
+
 ## Prerequisites
 
 - **Node.js** (>=22.0.0)
@@ -44,7 +46,7 @@ A CLI tool that automates the generation of creative assets for marketing campai
    npx tsx --env-file=.env index.ts generate -h
    ```
 
-   generate command with exisitng campaign and inputs (in `inputs` folder):
+   generate command with existing campaign and inputs (in `inputs` folder):
 
    ```bash
    npx tsx --env-file=.env index.ts generate campaign.yaml -o outputs
@@ -123,11 +125,11 @@ npx tsx --env-file=.env index.ts generate <campaign-brief-yaml> [options]
 
 ### Supported Aspect Ratios
 
-- `1:1` - Square (Instagram posts)
-- `16:9` - Landscape (YouTube thumbnails, Facebook ads)
-- `9:16` - Portrait (Instagram stories, TikTok)
-- `4:3` - Traditional (Facebook posts)
-- `3:4` - Portrait (Pinterest)
+- `1:1` - Square
+- `16:9` - Landscape
+- `9:16` - Portrait
+- `4:3` - Traditional
+- `3:4` - Portrait
 - `7:4` - Wide landscape
 - `9:7` - Slightly wide
 - `7:9` - Slightly tall
@@ -212,6 +214,66 @@ src/
 └── ffs-openapi-specs/             # OpenAPI specifications
 
 ```
+
+## Key Assumptions & Design Limitations
+
+> Also see [CHALLENGES.md](./CHALLENGES.md)
+
+### Assumptions
+
+This tool was built with the following assumptions:
+
+1. **This is POC**: the POC purpose is to evaluate technical skill and ability to work with different GenAI APIs. It is not intended to be production ready software. To implement all items from the exercise is to implement a GenStudio/Firefly competitor.
+1. **Product Images**: All products have cutout images (PNG files with transparent backgrounds) available locally.
+1. **Images are centered** All product images are centered in the final output behind a background generated via Firefly Object Composition API.
+1. **Campaign Structure**: Campaign briefs follow the predefined YAML schema format. Schema validation is implemented via [arktype](https://arktype.io/) and helpful messages will be printed when schema is invalid.
+
+### Current Limitations
+
+#### Performance & Scalability
+
+- **Sequential Processing**: Generations are intentionally sequential and not batched to avoid API rate limits for POC purposes. In reality, we'd have to investigate API limits and implement a proper parallelism strategy.
+- **No Caching**: Same prompts will regenerate images every time (no deduplication)
+- **No Parallel Processing**: Cannot generate multiple aspect ratios simultaneously
+
+#### Error Handling & Recovery
+
+- **Limited Retry Logic**: Failed generations don't automatically retry
+- **Partial Failure**: If one product/ratio fails, others will continue
+- **No Rollback**: No mechanism to undo partial generations
+
+#### Feature Limitations
+
+- **Aspect Ratios**: Limited to Adobe Firefly supported ratios (approximated if needed)
+- **Image Formats**: Output is JPEG only; no format options
+- **Preview Mode**: No dry-run or preview capability before full generation
+- **Template Support**: No campaign templates
+- **Localization**: Limited to `targetRegion` field; no advanced localization features
+
+#### Configuration & Validation
+
+- **Rate Limiting**: Simple delays only; no sophisticated rate limit handling
+- **API Quotas**: No quota monitoring or usage tracking
+
+#### Monitoring & Observability
+
+- **Progress Tracking**: Basic console output only
+- **Analytics**: No generation metrics or performance tracking
+- **Error Logging**: Limited error context and debugging information
+- **Audit Trail**: No record of generation history or changes
+
+### Recommendations for Production Use
+
+If adapting this tool for production environments, consider:
+
+1. **Add Batch Processing**: Implement concurrent generation with proper rate limiting
+2. **Implement Caching**: Cache generated images based on prompt/product combinations
+3. **Enhanced Error Handling**: Add retry logic, circuit breakers, and graceful degradation
+4. **Configuration Management**: Implement robust config validation and management
+5. **Monitoring**: Add comprehensive logging, metrics, and health checks
+6. **Security**: Implement secure credential management and API key rotation
+7. **Testing**: Add comprehensive unit and integration tests
+8. **Documentation**: Expand API documentation and troubleshooting guides
 
 ## Troubleshooting
 

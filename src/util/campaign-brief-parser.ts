@@ -10,7 +10,7 @@ import { parseNarrowTuple } from "arktype/internal/parser/tupleExpressions.ts";
 export const Product = type({
   name: "string",
   description: "string",
-  cutoutImage: "string?",
+  cutoutImage: "string",
 });
 
 export const CampaignBrief = type({

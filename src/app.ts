@@ -174,7 +174,6 @@ export async function generateCreativeAssets(
         options,
         ratio: ratio as keyof typeof FireflyAspectRatios,
       });
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // wait 1 second between products
       onProgress &&
         onProgress({
           product: product,

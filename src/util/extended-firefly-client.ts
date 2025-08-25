@@ -195,13 +195,14 @@ export class ExtendedFireflyClient extends FireflyClient {
     )?.assetId;
   }
 
-  // a convienience method to wait for a job to complete
+  // a convenience method to wait for a job to complete
   async awaitJobCompletion(jobId: string): Promise<JobResultResponse> {
     const jobResult = await this.getJobResult(jobId);
     if (
       jobResult.result.status === "running" ||
       jobResult.result.status === "cancel_pending"
     ) {
+      console.debug(`Job ${jobId} is still running, waiting 1 second...`);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       return this.awaitJobCompletion(jobId);
     }
