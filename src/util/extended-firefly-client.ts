@@ -10,13 +10,15 @@ import type {
   GenerateImagesRequestV3,
   GenerateObjectCompositeRequestV3,
   SimpleGenerateObjectCompositeOptions,
-} from "./extended-firefly-client.types.js";
+} from "./extended-firefly-client.types";
 import {
   FireflyAspectRatioKey,
   FireflyAspectRatios,
   getApproximatedAspectRatio,
-} from "./aspect-ratio-util.js";
+} from "./aspect-ratio-util";
 const fs = await import("fs/promises");
+
+import { logger } from "./logger";
 
 const allowedAspectRatios = ["1:1", "16:9", "9:16"];
 
@@ -202,7 +204,7 @@ export class ExtendedFireflyClient extends FireflyClient {
       jobResult.result.status === "running" ||
       jobResult.result.status === "cancel_pending"
     ) {
-      console.debug(`Job ${jobId} is still running, waiting 1 second...`);
+      logger.debug(`Job ${jobId} is still running, waiting 1 second...`);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       return this.awaitJobCompletion(jobId);
     }

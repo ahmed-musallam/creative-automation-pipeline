@@ -1,6 +1,6 @@
 import { AzureOpenAI, OpenAI } from "openai";
 import { AzureKeyCredential } from "@azure/core-auth";
-import type { CampaignBrief, Product } from "./campaign-brief-parser.js";
+import type { CampaignBrief, Product } from "./campaign-brief-parser";
 import {
   ChatCompletionSystemMessageParam,
   ChatCompletionUserMessageParam,

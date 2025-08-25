@@ -5,18 +5,18 @@ import {
   generateCreativeAssets,
   createFireflyClient,
   type GenerationOptions,
-} from "./src/app.js";
-import { parseCampaignBrief } from "./src/util/campaign-brief-parser.js";
+} from "./src/app";
+import { parseCampaignBrief } from "./src/util/campaign-brief-parser";
 import ora from "ora";
 import path from "path";
-import { logger, setLogLevel } from "./src/util/logger.js";
-import { AzureCampaignClient } from "./src/util/azure-client.js";
+import { logger, setLogLevel } from "./src/util/logger";
+import { AzureCampaignClient } from "./src/util/azure-client";
 import {
   FireflyAspectRatioKey,
   FireflyAspectRatios,
   getApproximatedAspectRatio,
   isValidAspectRatio,
-} from "./src/util/aspect-ratio-util.js";
+} from "./src/util/aspect-ratio-util";
 
 const program = new Command();
 

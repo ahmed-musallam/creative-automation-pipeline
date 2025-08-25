@@ -1,4 +1,4 @@
-import { FireflyAspectRatios } from "./aspect-ratio-util.js";
+import { FireflyAspectRatios } from "./aspect-ratio-util";
 
 export type SimpleGenerateImagesOptions = {
   prompt: string;

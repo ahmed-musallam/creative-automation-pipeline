@@ -5,19 +5,19 @@ import fs from "fs";
 import path from "path";
 import { Readable } from "stream";
 import { finished } from "stream/promises";
-import { ExtendedFireflyClient } from "./util/extended-firefly-client.js";
+import { ExtendedFireflyClient } from "./util/extended-firefly-client";
 import {
   CampaignBrief,
   type Product,
   validateCampaignBrief,
-} from "./util/campaign-brief-parser.js";
+} from "./util/campaign-brief-parser";
 
-import { logger } from "./util/logger.js";
-import { AzureCampaignClient } from "./util/azure-client.js";
+import { logger } from "./util/logger";
+import { AzureCampaignClient } from "./util/azure-client";
 import {
   FireflyAspectRatios,
   FireflyAspectRatioKey,
-} from "./util/aspect-ratio-util.js";
+} from "./util/aspect-ratio-util";
 
 export interface GenerationOptions {
   outputDir: string;

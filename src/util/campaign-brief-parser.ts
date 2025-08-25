@@ -2,10 +2,9 @@ import * as yaml from "js-yaml";
 import fs from "fs";
 import ISO639_1 from "iso-639-1";
 import ISO3166_1 from "iso-3166-1";
-import { logger } from "./logger.js";
+import { logger } from "./logger";
 
 import { type } from "arktype";
-import { parseNarrowTuple } from "arktype/internal/parser/tupleExpressions.ts";
 
 export const Product = type({
   name: "string",
