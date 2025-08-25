@@ -21,10 +21,10 @@ A CLI tool that automates the generation of creative assets for marketing campai
 
 1. **Clone the Repository:**
 
-   clone the repo via your favorite cloning method, command below uses SSH.
+   clone the repo via your favorite cloning method, command below uses HTTPS.
 
    ```bash
-   git clone git@github.com:ahmed-musallam/creative-automation-pipeline.git
+   git clone https://github.com/ahmed-musallam/creative-automation-pipeline.git
    cd creative-automation-pipeline
    ```
 
